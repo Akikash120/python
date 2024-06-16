@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-streamlit-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-streamlit-app
+  template:
+    metadata:
+      labels:
+        app: my-streamlit-app
+    spec:
+      containers:
+      - name: my-streamlit-app
+        image: dumbo.azurecr.io/pythonapplication:latest
+        ports:
+        - containerPort: 8501
