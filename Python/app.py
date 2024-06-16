@@ -11,7 +11,6 @@ for message in st.session_state.messages:
 
 def chat_with_user():
     st.session_state.messages.append({"role": "user", "content": st.session_state.prompt})
+    st.session_state.messages.append({"role": "assistant", "content": "I dont know"})
 
-st.session_state.prompt = st.text_input("Enter your message:")
-if st.button("Send"):
-    chat_with_user()
+prompt = st.chat_input("Ask me anything", on_submit=chat_with_user, key='prompt')
