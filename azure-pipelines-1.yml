@@ -25,7 +25,6 @@ steps:
     azureSubscriptionEndpoint: 'Akash'
     azureResourceGroup: 'Python'
     kubernetesCluster: 'akscluster'
-    command: 'create'
     arguments: 'az aks update -n akscluster -g Python  --attach-acr dumbo'
     secretType: 'dockerRegistry'
     containerRegistryType: 'Azure Container Registry'
