@@ -1,31 +1,42 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-streamlit-app
+  name: streamlit-app
+  labels:
+    app: streamlit
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: my-streamlit-app
+      app: streamlit
   template:
     metadata:
       labels:
-        app: my-streamlit-app
+        app: streamlit
     spec:
       containers:
-      - name: my-streamlit-app
-        image: dumbo.azurecr.io/pythonapplication:latest
-        ports:
-        - containerPort: 8501
+        - name: streamlit-container
+          image: dumbo.azurecr.io/pythonapplication:latest  # Replace with your ACR image URI
+          ports:
+            - containerPort: 8501
+          resources:
+            limits:
+              cpu: 0.5
+              memory: "512Mi"
+            requests:
+              cpu: 0.25
+              memory: "256Mi"
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: my-streamlit-service
+  name: streamlit-service
 spec:
-  type: LoadBalancer
-  ports:
-  - port: 8501
-    targetPort: 8501
   selector:
-    app: my-streamlit-app
+    app: streamlit
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8501
+  type: LoadBalancer  # Change to NodePort or ClusterIP if LoadBalancer is not supported
