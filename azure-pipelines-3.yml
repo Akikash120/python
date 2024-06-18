@@ -1,0 +1,55 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'Akash'
+    scriptType: 'ps'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az acr create --resource-group Python --name dumbo --location eastus'
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'Akash'
+    scriptType: 'ps'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az aks create \
+                  --resource-group Python \
+                  --name akscluster\
+                  --node-count 3 \
+                  --enable-addons monitoring \
+                  --generate-ssh-keys \
+                  --attach-acr dumbo \
+                  --location brazilsouth
+- task: Docker@2
+  inputs:
+    containerRegistry: 'dumbo'
+    repository: 'dumbo1'
+    command: 'build'
+    Dockerfile: '**/Dockerfile'
+    tags: 'latest'
+- task: Docker@2
+  inputs:
+    containerRegistry: 'dumbo'
+    repository: 'dumbo1'
+    command: 'push'
+    tags: 'latest'
+- task: Kubernetes@1
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscriptionEndpoint: 'Akash'
+    azureResourceGroup: 'Python'
+    kubernetesCluster: 'akscluster'
+    command: 'apply'
+    arguments: 'kubectl apply -f deployment.yaml'
+    secretType: 'dockerRegistry'
+    containerRegistryType: 'Azure Container Registry'
