@@ -10,18 +10,18 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'Akash'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az acr create --resource-group Python --name dumbo --location southcentralus --sku Standard'
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'Akash'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az aks create --resource-group Python --name akscluster --node-count 1 --enable-addons monitoring --generate-ssh-keys --attach-acr dumbo --location brazilsouth'
+#- task: AzureCLI@2
+#  inputs:
+#    azureSubscription: 'Akash'
+#    scriptType: 'bash'
+#    scriptLocation: 'inlineScript'
+#    inlineScript: 'az acr create --resource-group Python --name dumbo --location southcentralus --sku Standard'
+#- task: AzureCLI@2
+#  inputs:
+#    azureSubscription: 'Akash'
+#    scriptType: 'bash'
+#    scriptLocation: 'inlineScript'
+#    inlineScript: 'az aks create --resource-group Python --name akscluster --node-count 1 --enable-addons monitoring --generate-ssh-keys --attach-acr dumbo --location brazilsouth'
 - task: Docker@2
   inputs:
     containerRegistry: 'dumbo'
