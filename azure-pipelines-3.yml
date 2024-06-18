@@ -27,7 +27,7 @@ steps:
     containerRegistry: 'dumbo'
     repository: 'pythonapplication'
     command: 'build'
-    Dockerfile: '**/Dockerfile'
+    Dockerfile: 'Python/Dockerfile'
     tags: 'latest'
 - task: Docker@2
   inputs:
