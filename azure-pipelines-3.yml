@@ -15,7 +15,7 @@ steps:
     azureSubscription: 'Akash'
     scriptType: 'ps'
     scriptLocation: 'inlineScript'
-    inlineScript: 'az acr create --resource-group Python --name dumbo --location eastus'
+    inlineScript: 'az acr create --resource-group Python --name dumbo --location eastus --sku Standard'
 - task: AzureCLI@2
   inputs:
     azureSubscription: 'Akash'
@@ -50,6 +50,7 @@ steps:
     azureResourceGroup: 'Python'
     kubernetesCluster: 'akscluster'
     command: 'apply'
-    arguments: 'kubectl apply -f deployment.yaml'
+    useConfigurationFile: true
+    configuration: 'Python/deployment.yaml'
     secretType: 'dockerRegistry'
     containerRegistryType: 'Azure Container Registry'
