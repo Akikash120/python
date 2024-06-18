@@ -8,6 +8,12 @@ trigger:
 
 pool:
   vmImage: ubuntu-latest
+variables:
+  RESOURCE_GROUP: 'Python'  # Replace with your resource group
+  AKS_CLUSTER_NAME: 'akscluster'   # Replace with your AKS cluster name
+  AKS_LOCATION: 'eastus'             # Replace with your desired location
+  ACR_NAME: 'dumbo'                  # Replace with your Azure Container Registry name
+
 
 steps:
 - task: Docker@2
@@ -19,16 +25,33 @@ steps:
   inputs:
     containerRegistry: 'dumbo'
     command: 'push'
-- task: Kubernetes@1
+
+- task: AzureCLI@2
   inputs:
-    connectionType: 'Azure Resource Manager'
-    azureSubscriptionEndpoint: 'Akash'
-    azureResourceGroup: 'Python'
-    kubernetesCluster: 'akscluster'
-    command: 'create'
-    arguments: 'az aks create --resourcegroup-name Python -name akscluster'
-    secretType: 'dockerRegistry'
-    containerRegistryType: 'Azure Container Registry'
+    azureSubscription: 'Akash'  # Replace with your service connection name
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      # Create Resource Group if it doesn't exist
+      az group create --name $RESOURCE_GROUP --location $AKS_LOCATION
+      
+      # Create AKS Cluster
+      az aks create \
+        --resource-group $RESOURCE_GROUP \
+        --name $AKS_CLUSTER_NAME \
+        --node-count 3 \
+        --enable-addons monitoring \
+        --generate-ssh-keys \
+        --attach-acr $ACR_NAME \
+        --location $AKS_LOCATION
+      
+      # Get AKS credentials
+      az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER_NAME
+      
+      # Verify the connection to the cluster
+      kubectl get nodes
+
+
 - task: Kubernetes@1
   inputs:
     connectionType: 'Azure Resource Manager'
