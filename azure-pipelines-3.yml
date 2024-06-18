@@ -21,7 +21,7 @@ steps:
     azureSubscription: 'Akash'
     scriptType: 'ps'
     scriptLocation: 'inlineScript'
-    inlineScript: 'az aks create --resource-group Python --name akscluster --node-count 3 --enable-addons monitoring --generate-ssh-keys --attach-acr dumbo --location brazilsouth'
+    inlineScript: 'az aks create --resource-group Python --name akscluster --node-count 3 --enable-addons monitoring --generate-ssh-keys --attach-acr dumbo --location westeurope'
 - task: Docker@2
   inputs:
     containerRegistry: 'dumbo'
