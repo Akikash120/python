@@ -11,7 +11,7 @@ pool:
 variables:
   RESOURCE_GROUP: 'Python'  # Replace with your resource group
   AKS_CLUSTER_NAME: 'akscluster'   # Replace with your AKS cluster name
-  AKS_LOCATION: 'eastus'             # Replace with your desired location
+  AKS_LOCATION: 'westeurope'             # Replace with your desired location
   ACR_NAME: 'dumbo'                  # Replace with your Azure Container Registry name
 
 
@@ -43,7 +43,7 @@ steps:
         --enable-addons monitoring \
         --generate-ssh-keys \
         --attach-acr $ACR_NAME \
-        --location $AKS_LOCATION
+        --location brazilsouth
       
       # Get AKS credentials
       az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER_NAME
