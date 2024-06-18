@@ -33,7 +33,7 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |
       # Create Resource Group if it doesn't exist
-      az group create --name $RESOURCE_GROUP --location $AKS_LOCATION
+      #az group create --name $RESOURCE_GROUP --location $AKS_LOCATION
       
       # Create AKS Cluster
       az aks create \
@@ -43,7 +43,7 @@ steps:
         --enable-addons monitoring \
         --generate-ssh-keys \
         --attach-acr $ACR_NAME \
-        --location brazilsouth
+        --location eastus
       
       # Get AKS credentials
       az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER_NAME
