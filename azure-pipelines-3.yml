@@ -26,14 +26,8 @@ steps:
   inputs:
     containerRegistry: 'dumbo'
     repository: 'pythonapplication'
-    command: 'build'
+    command: 'buildAndPush'
     Dockerfile: 'Python/Dockerfile'
-    tags: 'latest'
-- task: Docker@2
-  inputs:
-    containerRegistry: 'dumbo'
-    repository: 'pythonapplication'
-    command: 'push'
     tags: 'latest'
 - task: Kubernetes@1
   inputs:
