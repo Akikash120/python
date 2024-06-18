@@ -25,14 +25,14 @@ steps:
 - task: Docker@2
   inputs:
     containerRegistry: 'dumbo'
-    repository: 'dumbo1'
+    repository: 'pythonapplication'
     command: 'build'
     Dockerfile: '**/Dockerfile'
     tags: 'latest'
 - task: Docker@2
   inputs:
     containerRegistry: 'dumbo'
-    repository: 'dumbo1'
+    repository: 'pythonapplication'
     command: 'push'
     tags: 'latest'
 - task: Kubernetes@1
