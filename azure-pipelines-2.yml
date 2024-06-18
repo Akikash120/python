@@ -1,0 +1,101 @@
+trigger:
+- main
+ 
+variables:
+  # Docker image name
+  imageName: python-app
+ 
+stages:
+- stage: Build
+  displayName: Build and Push Docker Image
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.x'
+        addToPath: true
+ 
+    - script: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+      displayName: 'Install dependencies'
+    - task: Docker@2
+      inputs:
+        containerRegistry: '$(dockerRegistryServiceConnection)'
+        repository: '$(imageName)'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        tags: |
+          $(Build.BuildId)
+ 
+- stage: Deploy
+  displayName: Deploy to AKS
+  dependsOn: Build
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy
+    environment: 'aks'
+    pool:
+      vmImage: 'ubuntu-latest'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: Kubernetes@1
+            inputs:
+              connectionType: 'Azure Resource Manager'
+              azureSubscription: 'Akash'
+              azureResourceGroup: 'Python'
+              kubernetesCluster: 'akscluster'
+              namespace: 'python-app-namespace'
+              command: 'apply'
+              useConfigurationFile: true
+              configuration: |
+                # Namespace YAML
+                apiVersion: v1
+                kind: Namespace
+                metadata:
+                  name: python-app-namespace
+                ---
+                # Deployment YAML
+                apiVersion: apps/v1
+                kind: Deployment
+                metadata:
+                  name: python-app-deployment
+                  namespace: python-app-namespace
+                spec:
+                  replicas: 3
+                  selector:
+                    matchLabels:
+                      app: python-app
+                  template:
+                    metadata:
+                      labels:
+                        app: python-app
+                    spec:
+                      containers:
+                      - name: python-app
+                        image: $(imageName):$(Build.BuildId)
+                        ports:
+                        - containerPort: 8501
+                        env:
+                        - name: NAME
+                          value: "World"
+                ---
+                # Service YAML
+                apiVersion: v1
+                kind: Service
+                metadata:
+                  name: python-app-service
+                  namespace: python-app-namespace
+                spec:
+                  type: LoadBalancer
+                  ports:
+                  - port: 8501
+                    targetPort: 8501
+                  selector:
+                    app: python-app
