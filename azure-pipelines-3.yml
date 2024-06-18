@@ -7,7 +7,7 @@ trigger:
 - main
 
 pool:
-  vmImage: windows-latest
+  vmImage: ubantu-latest
 
 steps:
  #task: AzureCLI@2
