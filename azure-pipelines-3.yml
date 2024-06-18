@@ -16,12 +16,12 @@ steps:
     #scriptType: 'ps'
     #scriptLocation: 'inlineScript'
     #inlineScript: 'az acr create --resource-group Python --name dumbo --location eastus --sku Standard'
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'Akash'
-    scriptType: 'ps'
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az aks create --resource-group Python --name akscluster --node-count 3 --enable-addons monitoring --generate-ssh-keys --attach-acr dumbo --location westeurope'
+# task: AzureCLI@2
+ # inputs:
+  #  azureSubscription: 'Akash'
+   # scriptType: 'ps'
+    #scriptLocation: 'inlineScript'
+    #inlineScript: 'az aks create --resource-group Python --name akscluster --node-count 3 --enable-addons monitoring --generate-ssh-keys --attach-acr dumbo --location westeurope'
 - task: Docker@2
   inputs:
     containerRegistry: 'dumbo'
