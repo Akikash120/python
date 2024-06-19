@@ -11,6 +11,6 @@ for message in st.session_state.messages:
 
 def chat_with_user():
     st.session_state.messages.append({"role": "user", "content": st.session_state.prompt})
-    st.session_state.messages.append({"role": "assistant", "content": "Why Should I need to answer"})
+    st.session_state.messages.append({"role": "assistant", "content": "Who the hell are you"})
 
 prompt = st.chat_input("Ask me anything", on_submit=chat_with_user, key='prompt')
