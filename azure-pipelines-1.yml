@@ -9,7 +9,7 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 variables:
-  RESOURCE_GROUP: 'Python1'  # Replace with your resource group
+  RESOURCE_GROUP: 'Python'  # Replace with your resource group
   AKS_CLUSTER_NAME: 'akscluster'   # Replace with your AKS cluster name
   AKS_LOCATION: 'westeurope'             # Replace with your desired location
   ACR_NAME: 'dumbo'                  # Replace with your Azure Container Registry name
